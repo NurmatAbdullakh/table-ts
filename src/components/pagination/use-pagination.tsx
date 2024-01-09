@@ -1,5 +1,6 @@
 import { ChangeEvent, ChangeEventHandler, Dispatch, MouseEventHandler, SetStateAction, useMemo } from "react"
 import { callFns } from "../../utils/callFns";
+import { User } from "../../store/user";
 
 
 
@@ -30,7 +31,7 @@ interface UsePaginationReturn {
     getPrevButtonProps: GetPrevButtonPropsFn;
     getNextButtonProps: GetNextButtonPropsFn;
     getLimitProps: GetLimitPropsFn;
-    renderingData: { name: string; age: number; address: string; id: string; }[];
+    renderingData: User[];
     steps: number[]
 }
 
@@ -39,7 +40,7 @@ type usePaginationParams = {
     limit: number,
     setPage: Dispatch<SetStateAction<number>>,
     setLimit: Dispatch<SetStateAction<number>>,
-    data: { name: string; age: number; address: string; id: string; }[]
+    data: User[]
 }
 
 type UsePaginationFn = (params: usePaginationParams) => UsePaginationReturn;

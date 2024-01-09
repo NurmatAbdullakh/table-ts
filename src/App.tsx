@@ -2,10 +2,10 @@ import { useTableHook } from "./components/table/use-table-hook";
 import { Table, TableContainer } from "./components/table/index.d";
 import { Pagination, usePagination } from "./components/pagination/index.d";
 import { useAppProps } from "./use-app-props";
+import { User } from "./store/user";
+import { ReactNode } from "react";
 
 export const App = () => {
-
-
   const {
     limit,
     setLimit,
@@ -65,8 +65,7 @@ export const App = () => {
                     return (
                       <Table.Td key={index}>
                         {
-                          row[column.id as keyof typeof row] ||
-                          row[column.key as keyof typeof row]
+                          row[column.key as keyof User] as ReactNode
                         }
                       </Table.Td>
                     );
