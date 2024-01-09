@@ -6,12 +6,14 @@ import { callFns } from "../../utils/callFns";
 type GetPrevButtonPropsFn = (
     options?: {
         onClick?: MouseEventHandler<HTMLButtonElement>;
+        disabled?: boolean
     }
 ) => object;
 
 type GetNextButtonPropsFn = (
     options?: {
         onClick?: MouseEventHandler<HTMLButtonElement>;
+        disabled?: boolean
     }
 ) => object;
 

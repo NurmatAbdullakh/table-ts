@@ -1,8 +1,9 @@
 import { FC, MouseEventHandler, ReactNode } from "react";
 
 interface ButtonProps {
-    children?: ReactNode,
-    onClick: MouseEventHandler<HTMLButtonElement>,
+    children?: ReactNode
+    onClick?: MouseEventHandler<HTMLButtonElement>,
+    disabled?: boolean,
     options?: object
 }
 
