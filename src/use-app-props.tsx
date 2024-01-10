@@ -7,20 +7,20 @@ type getInputValue = (columnKey: string, filterValues: [string, unknown][]) => s
 export const useAppProps = () => {
     const users = useAppSelector(state => state.user.users)
     const [filter, setFilter] = useState({})
+    const [sortConfig, setSortConfig] = useState({ type: "", columnKey: "" })
 
-    const [limit, setLimit] = useState(1);
+    const [limit, setLimit] = useState(3);
     const [page, setPage] = useState(1);
 
-    // const filterDataByFilterValue = (data: User[], searchTerm: string) =>
-    //   data.filter(element =>
-    //     Object.values(element)
-    //       .some(value => {
-    //         const formatValue = String(value)?.toLowerCase()?.replace(" ", "")
-    //         const formatSearchTerm = searchTerm?.toLowerCase()?.replace(" ", "")
 
-    //         return formatValue?.includes(formatSearchTerm)
-    //       })
-    //   )
+
+    // FILTER ////////////////////////////////////////////////////////////
+    const filterValues = useMemo(
+        () => Object.entries(filter)
+            .filter(([, value]) => value)
+        ,
+        [filter]
+    )
 
     const filterDataByFilterValue = (data: User[], filterValues: [string, unknown][]) =>
         data
@@ -41,12 +41,51 @@ export const useAppProps = () => {
 
     const isClearButtonDisabled = useMemo(() => !Object.values(filter)?.length, [filter])
 
-    const filterValues = useMemo(
-        () => Object.entries(filter)
-            .filter(([, value]) => value)
-        ,
-        [filter]
-    )
+
+    // SORT /////////////////////////////////////////////////////////////////////////////////////////
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sortData = (data: any) => {
+        if (+data[0][sortConfig?.columnKey]) {
+            return data?.sort((a: { [x: string]: number; }, b: { [x: string]: number; }) => {
+                switch (sortConfig?.type) {
+                    case "ASC": return a[sortConfig.columnKey] - b[sortConfig.columnKey]
+                    case "DSC": return b[sortConfig.columnKey] - a[sortConfig.columnKey]
+                    default: return
+                }
+            })
+        }
+        return data?.sort((a: { [x: string]: number; }, b: { [x: string]: number; }) => {
+            switch (sortConfig?.type) {
+                case "ASC": return a[sortConfig.columnKey] > b[sortConfig.columnKey] ? 1 : -1
+                case "DSC": return a[sortConfig.columnKey] > b[sortConfig.columnKey] ? -1 : 1
+                default: return
+            }
+        })
+    }
+
+    const onSortBtnClick = (columnKey: string) => {
+        setSortConfig(old => {
+            const newConf = {
+                type: "",
+                columnKey: columnKey
+            }
+
+            switch (old?.type || "") {
+                case "ASC":
+                    newConf.type = "DSC"
+                    break
+                case "DSC":
+                    newConf.type = ""
+                    break
+                default:
+                    newConf.type = "ASC"
+                    break
+            }
+
+            return newConf
+        })
+    }
 
     const getInputValue: getInputValue = (columnKey, filterValues) => {
         const value = filterValues?.find(([valueKey]) => columnKey === valueKey)?.[1] || ""
@@ -109,7 +148,23 @@ export const useAppProps = () => {
         clearFilter,
         getInputValue,
         filterDataByFilterValue,
-        isClearButtonDisabled
+        isClearButtonDisabled,
+        setSortConfig,
+        sortConfig,
+        sortData,
+        onSortBtnClick
     }
 
 }
+
+
+// const filterDataByFilterValue = (data: User[], searchTerm: string) =>
+//   data.filter(element =>
+//     Object.values(element)
+//       .some(value => {
+//         const formatValue = String(value)?.toLowerCase()?.replace(" ", "")
+//         const formatSearchTerm = searchTerm?.toLowerCase()?.replace(" ", "")
+
+//         return formatValue?.includes(formatSearchTerm)
+//       })
+//   )

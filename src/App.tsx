@@ -19,7 +19,10 @@ export const App = () => {
     clearFilter,
     getInputValue,
     filterDataByFilterValue,
-    isClearButtonDisabled
+    isClearButtonDisabled,
+    onSortBtnClick,
+    sortConfig,
+    sortData
   } = useAppProps()
 
   const {
@@ -65,6 +68,18 @@ export const App = () => {
                           }))
                         }
                       />
+                      <Button
+                        onClick={() => onSortBtnClick(column.key)}
+                      >
+                        {
+                          (
+                            (column.key === sortConfig.columnKey) && sortConfig.type === "ASC") ?
+                            "+"
+                            : ((column.key === sortConfig.columnKey) && sortConfig.type === "DSC") ?
+                              "-"
+                              : "+-"
+                        }
+                      </Button>
                     </div>
                   </Table.Th>
                 );
@@ -73,7 +88,7 @@ export const App = () => {
           </Table.Head>
           <Table.Body>
             {
-              filterDataByFilterValue(renderingData, filterValues)
+              filterDataByFilterValue(sortData(renderingData), filterValues)
                 .map((row, index) => {
                   return (
                     <Table.Tr
