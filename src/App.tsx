@@ -4,7 +4,6 @@ import { LeftArrowIcon, RightArrowIcon } from "./assets/icons/icons";
 import { Button } from "./components/pagination/button";
 import { Pagination, usePagination } from "./components/pagination/index.d";
 import { Table, TableContainer } from "./components/table/index.d";
-import { useTableHook } from "./components/table/use-table-hook";
 import { User } from "./store/user";
 import { useAppProps } from "./use-app-props";
 import { SearchInput } from "./UI/SearchInput";
