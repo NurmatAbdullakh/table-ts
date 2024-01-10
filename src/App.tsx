@@ -43,10 +43,6 @@ export const App = () => {
     setPage,
   })
 
-  const {
-    getRowProps,
-  } = useTableHook();
-
   return (
     <div className="wrapper">
 
@@ -87,9 +83,7 @@ export const App = () => {
                   return (
                     <Table.Tr
                       key={row.id || index}
-                      {...getRowProps({
-                        onClick: () => console.log({ row, index }),
-                      })}>
+                    >
                       {columns.map((column, index) => {
                         return (
                           <Table.Td key={index}>
