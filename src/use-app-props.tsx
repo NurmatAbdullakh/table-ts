@@ -1,20 +1,32 @@
-import { useMemo, useState } from "react";
-import { useAppSelector } from "./store/store";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector } from "./store/store";
 import { User } from "./store/user";
+import { fetchUser } from "./store/user/userSlice";
 
 type getInputValue = (columnKey: string, filterValues: [string, unknown][]) => string
 
 export const useAppProps = () => {
     const users = useAppSelector(state => state.user.users)
+    const dispatch = useAppDispatch()
     const [filter, setFilter] = useState({})
     const [sortConfig, setSortConfig] = useState({ type: "", columnKey: "" })
 
-    const [limit, setLimit] = useState(3);
+    const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(1);
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    }, [])
 
 
 
     // FILTER ////////////////////////////////////////////////////////////
+    const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>, columnKey: string) =>
+        setFilter(old => ({
+            ...old,
+            [columnKey]: e.target.value
+        }))
+
     const filterValues = useMemo(
         () => Object.entries(filter)
             .filter(([, value]) => value)
@@ -46,7 +58,7 @@ export const useAppProps = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sortData = (data: any) => {
-        if (+data[0][sortConfig?.columnKey]) {
+        if (+data?.[0]?.[sortConfig?.columnKey]) {
             return data?.sort((a: { [x: string]: number; }, b: { [x: string]: number; }) => {
                 switch (sortConfig?.type) {
                     case "ASC": return a[sortConfig.columnKey] - b[sortConfig.columnKey]
@@ -152,7 +164,8 @@ export const useAppProps = () => {
         setSortConfig,
         sortConfig,
         sortData,
-        onSortBtnClick
+        onSortBtnClick,
+        onSearchInputChange
     }
 
 }

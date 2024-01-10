@@ -88,6 +88,12 @@ h6 {
     font-weight: 400;
 }
 
+.wrapper {
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
 .table-container {
     border-radius: 12px;
     border: 1px solid #E5E9EB;
@@ -100,7 +106,7 @@ h6 {
     border: 1px solid #E5E9EB;
     margin-bottom: 12px;
     overflow: auto;
-    min-height: 200px;
+    min-height: 400px;
 }
 
 thead th,
@@ -125,10 +131,13 @@ tbody tr {
     text-align: center;
     white-space: nowrap;
     padding: 10px;
-
 }
 
-tbody tr:nth-child(odd) {
+tbody tr:last-child td {
+    border-bottom: 1px solid #F4F6FA;
+}
+
+tbody tr:nth-child(even) {
     background: #F4F6FA;
 }
 
@@ -160,21 +169,22 @@ thead th:not(:first-child) {
 
 }
 
-.table-container button {
-    border: #303940;
-    border-radius: 2px;
-    color: #E5E9EB;
-    background: rgb(14, 14, 202);
-    min-height: 20px;
-    padding: 0 8px;
-    margin-right: 4px;
+.table-container .button {
+    border-radius: 6px;
+    background: #F43F5E;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    color: white;
+    align-items: center;
 }
 
-.table-container button:disabled {
+.table-container .button:disabled {
     border: #303940;
     border-radius: 2px;
     color: #E5E9EB;
-    background: rgb(121, 121, 207);
+    background: #f43f5db0;
     min-height: 20px;
     padding: 0 8px;
     margin-right: 4px;
@@ -185,4 +195,67 @@ input {
     border: 1px solid #303940;
     padding: 2px;
     border-radius: 4px;
+}
+
+select {
+    border-radius: 6px;
+    border: 1px solid #F43F5E;
+    background: #FFF;
+    display: flex;
+    height: 36px;
+    width: 36px;
+    justify-content: center;
+    align-items: center;
+    color: #F43F5E;
+}
+
+button.step {
+    border-radius: 6px;
+    border: 1px solid #F43F5E;
+    color: #F43F5E;
+    background: white;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+button.step.active {
+    border-radius: 6px;
+    border: none;
+    color: white;
+    background: #F43F5E;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigator:hover {
+    box-shadow: 0 0 1px #303940;
+}
+
+.navigator {
+    border-radius: 6px;
+    border: 1px solid #F43F5E;
+    background: white;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigator:hover {
+    box-shadow: 0 0 1px #303940;
+}
+
+.navigator:disabled {
+    border-radius: 6px;
+    color: #E5E9EB;
+    cursor: not-allowed;
+    opacity: 0.4;
+
 }

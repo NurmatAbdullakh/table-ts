@@ -1,10 +1,14 @@
-import { useTableHook } from "./components/table/use-table-hook";
-import { Table, TableContainer } from "./components/table/index.d";
-import { Pagination, usePagination } from "./components/pagination/index.d";
-import { useAppProps } from "./use-app-props";
-import { User } from "./store/user";
 import { ReactNode } from "react";
+import { SortButton } from "./UI/SortButton";
+import { LeftArrowIcon, RightArrowIcon } from "./assets/icons/icons";
 import { Button } from "./components/pagination/button";
+import { Pagination, usePagination } from "./components/pagination/index.d";
+import { Table, TableContainer } from "./components/table/index.d";
+import { useTableHook } from "./components/table/use-table-hook";
+import { User } from "./store/user";
+import { useAppProps } from "./use-app-props";
+import { SearchInput } from "./UI/SearchInput";
+
 
 export const App = () => {
   const {
@@ -14,7 +18,6 @@ export const App = () => {
     setPage,
     data,
     columns,
-    setFilter,
     filterValues,
     clearFilter,
     getInputValue,
@@ -22,7 +25,8 @@ export const App = () => {
     isClearButtonDisabled,
     onSortBtnClick,
     sortConfig,
-    sortData
+    sortData,
+    onSearchInputChange
   } = useAppProps()
 
   const {
@@ -44,9 +48,11 @@ export const App = () => {
   } = useTableHook();
 
   return (
-    <div className="container">
+    <div className="wrapper">
+
       <TableContainer>
-        <Button disabled={isClearButtonDisabled} onClick={clearFilter} style={{ marginBottom: "10px" }}>
+        <Button disabled={isClearButtonDisabled} onClick={clearFilter} style={{ marginBottom: "10px", minWidth: "100px", display: "flex" }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" ><path fill="white" d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm4 12H8v-9h2v9zm6 0h-2v-9h2v9zm.618-15L15 2H9L7.382 4H3v2h18V4z"></path></svg>
           clear filter
         </Button>
         <Table>
@@ -58,28 +64,16 @@ export const App = () => {
                     key={column?.id || index}>
                     <div>
                       {column.title}
-                      <input
-                        placeholder="Search"
+                      <SearchInput
                         value={getInputValue(column.key, filterValues)}
-                        onChange={(e) =>
-                          setFilter(old => ({
-                            ...old,
-                            [column.key]: e.target.value
-                          }))
-                        }
+                        onChange={(e) => onSearchInputChange(e, column.key)}
                       />
-                      <Button
+                      <SortButton
                         onClick={() => onSortBtnClick(column.key)}
-                      >
-                        {
-                          (
-                            (column.key === sortConfig.columnKey) && sortConfig.type === "ASC") ?
-                            "+"
-                            : ((column.key === sortConfig.columnKey) && sortConfig.type === "DSC") ?
-                              "-"
-                              : "+-"
-                        }
-                      </Button>
+                        sortType={sortConfig.type}
+                        columnKey={column.key}
+                        sortConfigColumnKey={sortConfig.columnKey}
+                      />
                     </div>
                   </Table.Th>
                 );
@@ -87,9 +81,9 @@ export const App = () => {
             </Table.Tr>
           </Table.Head>
           <Table.Body>
-            {
+            {!!data?.length &&
               filterDataByFilterValue(sortData(renderingData), filterValues)
-                .map((row, index) => {
+                ?.map((row, index) => {
                   return (
                     <Table.Tr
                       key={row.id || index}
@@ -109,16 +103,21 @@ export const App = () => {
           </Table.Body>
         </Table>
         <Pagination>
-          <Pagination.Limit {...getLimitProps()}>
-            <Pagination.Limit.Option value="1">1</Pagination.Limit.Option>
-            <Pagination.Limit.Option value="2">2</Pagination.Limit.Option>
-            <Pagination.Limit.Option value="3">3</Pagination.Limit.Option>
-          </Pagination.Limit>
-          <Pagination.Button {...getPrevButtonProps({ disabled: page === 1 })}>Prev</Pagination.Button>
-          {steps?.map((step) => (
-            <Pagination.Button onClick={() => setPage(step + 1)}>{step + 1}</Pagination.Button>
-          ))}
-          <Pagination.Button {...getNextButtonProps({ disabled: page >= Math.ceil(data.length / limit) })}>Next</Pagination.Button>
+          <Pagination.Buttongroup>
+            <Pagination.Limit {...getLimitProps()}>
+              <Pagination.Limit.Option value="5">5</Pagination.Limit.Option>
+              <Pagination.Limit.Option value="10">10</Pagination.Limit.Option>
+            </Pagination.Limit>
+            <Pagination.Navigator {...getPrevButtonProps({ disabled: page === 1 })}>
+              <LeftArrowIcon />
+            </Pagination.Navigator>
+            {steps?.map((step) => (
+              <Pagination.Step isActive={page === step + 1} onClick={() => setPage(step + 1)}>{step + 1}</Pagination.Step>
+            ))}
+            <Pagination.Navigator {...getNextButtonProps({ disabled: page >= Math.ceil(data.length / limit) })}>
+              <RightArrowIcon />
+            </Pagination.Navigator>
+          </Pagination.Buttongroup>
         </Pagination>
       </TableContainer>
     </div >

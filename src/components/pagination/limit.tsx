@@ -18,7 +18,7 @@ export const Limit: FC<LimitProps> & { Option: typeof Option } = ({ onChange, ch
     return (
         <select
             onChange={onChange}
-            defaultValue={3}
+            defaultValue={5}
             {...props}
             name="limit"
             id="limit"
