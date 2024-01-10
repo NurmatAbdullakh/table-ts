@@ -1,12 +1,8 @@
-import { FC, Key, MouseEventHandler, ReactNode } from "react";
+import { FC, ReactNode, ThHTMLAttributes } from "react";
 
-interface ThProps {
-
+interface ThProps extends ThHTMLAttributes<HTMLTableHeaderCellElement> {
     children: ReactNode,
-    onClick?: MouseEventHandler | undefined
-    key: Key
 }
-
 
 export const Th: FC<ThProps> = ({ children, onClick, ...props }) => {
     return (

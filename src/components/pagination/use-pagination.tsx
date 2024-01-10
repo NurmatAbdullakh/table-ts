@@ -4,14 +4,14 @@ import { User } from "../../store/user";
 
 
 
-type GetPrevButtonPropsFn = (
+type getPrevButtonPropsFn = (
     options?: {
         onClick?: MouseEventHandler<HTMLButtonElement>;
         disabled?: boolean
     }
 ) => object;
 
-type GetNextButtonPropsFn = (
+type getNextButtonPropsFn = (
     options?: {
         onClick?: MouseEventHandler<HTMLButtonElement>;
         disabled?: boolean
@@ -19,7 +19,7 @@ type GetNextButtonPropsFn = (
 ) => object;
 
 
-export type GetLimitPropsFn = (
+export type getLimitPropsFn = (
     options?: {
         onChange?: ChangeEventHandler<HTMLSelectElement>;
     }
@@ -28,9 +28,9 @@ export type GetLimitPropsFn = (
 
 
 interface UsePaginationReturn {
-    getPrevButtonProps: GetPrevButtonPropsFn;
-    getNextButtonProps: GetNextButtonPropsFn;
-    getLimitProps: GetLimitPropsFn;
+    getPrevButtonProps: getPrevButtonPropsFn;
+    getNextButtonProps: getNextButtonPropsFn;
+    getLimitProps: getLimitPropsFn;
     renderingData: User[];
     steps: number[]
 }
@@ -40,7 +40,7 @@ type usePaginationParams = {
     limit: number,
     setPage: Dispatch<SetStateAction<number>>,
     setLimit: Dispatch<SetStateAction<number>>,
-    data: User[]
+    data: User[],
 }
 
 type UsePaginationFn = (params: usePaginationParams) => UsePaginationReturn;
@@ -51,6 +51,8 @@ export const usePagination: UsePaginationFn = ({ page, limit, setPage, setLimit,
 
     const firstPageIndex = Math.max((page - 1) * limit, 0)
     const lastPageIndex = firstPageIndex + limit
+
+
 
     const renderingData = useMemo(() =>
         data.slice(firstPageIndex, lastPageIndex),
@@ -75,7 +77,7 @@ export const usePagination: UsePaginationFn = ({ page, limit, setPage, setLimit,
         setLimit(+e.target.value)
     }
 
-    const getPrevButtonProps: GetPrevButtonPropsFn = ({ onClick = () => { }, ...props } = {}) => (
+    const getPrevButtonProps: getPrevButtonPropsFn = ({ onClick = () => { }, ...props } = {}) => (
         {
             type: "button",
             onClick: callFns(handlePrevious, onClick),
@@ -83,7 +85,7 @@ export const usePagination: UsePaginationFn = ({ page, limit, setPage, setLimit,
         }
     )
 
-    const getNextButtonProps: GetNextButtonPropsFn = ({ onClick = () => { }, ...props } = {}) => (
+    const getNextButtonProps: getNextButtonPropsFn = ({ onClick = () => { }, ...props } = {}) => (
         {
             type: "button",
             onClick: callFns(handleNext, onClick),
@@ -91,7 +93,7 @@ export const usePagination: UsePaginationFn = ({ page, limit, setPage, setLimit,
         }
     )
 
-    const getLimitProps: GetLimitPropsFn = ({ onChange = () => { }, ...props } = {}) => (
+    const getLimitProps: getLimitPropsFn = ({ onChange = () => { }, ...props } = {}) => (
         {
             onChange: callFns(handleLimitChange, onChange),
             ...props

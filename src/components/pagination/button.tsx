@@ -1,10 +1,7 @@
-import { FC, MouseEventHandler, ReactNode } from "react";
+import { ButtonHTMLAttributes, FC, ReactNode } from "react";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: ReactNode
-    onClick?: MouseEventHandler<HTMLButtonElement>,
-    disabled?: boolean,
-    options?: object
 }
 
 export const Button: FC<ButtonProps> = ({ onClick, children, ...props }) => {

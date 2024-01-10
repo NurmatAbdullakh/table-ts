@@ -4,6 +4,7 @@ import { Pagination, usePagination } from "./components/pagination/index.d";
 import { useAppProps } from "./use-app-props";
 import { User } from "./store/user";
 import { ReactNode } from "react";
+import { Button } from "./components/pagination/button";
 
 export const App = () => {
   const {
@@ -13,6 +14,12 @@ export const App = () => {
     setPage,
     data,
     columns,
+    setFilter,
+    filterValues,
+    clearFilter,
+    getInputValue,
+    filterDataByFilterValue,
+    isClearButtonDisabled
   } = useAppProps()
 
   const {
@@ -30,49 +37,60 @@ export const App = () => {
   })
 
   const {
-    getHeaderRowProps,
     getRowProps,
   } = useTableHook();
 
   return (
     <div className="container">
       <TableContainer>
+        <Button disabled={isClearButtonDisabled} onClick={clearFilter} style={{ marginBottom: "10px" }}>
+          clear filter
+        </Button>
         <Table>
           <Table.Head>
             <Table.Tr>
               {columns.map((column, index) => {
                 return (
                   <Table.Th
-                    key={column?.id || index}
-                    {...getHeaderRowProps({
-                      onClick: () => console.log({ column, index }),
-                    })}>
-                    {column.title}
+                    key={column?.id || index}>
+                    <div>
+                      {column.title}
+                      <input
+                        placeholder="Search"
+                        value={getInputValue(column.key, filterValues)}
+                        onChange={(e) =>
+                          setFilter(old => ({
+                            ...old,
+                            [column.key]: e.target.value
+                          }))
+                        }
+                      />
+                    </div>
                   </Table.Th>
                 );
               })}
             </Table.Tr>
           </Table.Head>
           <Table.Body>
-            {renderingData.map((row, index) => {
-              return (
-                <Table.Tr
-                  key={row.id || index}
-                  {...getRowProps({
-                    onClick: () => console.log({ row, index }),
-                  })}>
-                  {columns.map((column, index) => {
-                    return (
-                      <Table.Td key={index}>
-                        {
-                          row[column.key as keyof User] as ReactNode
-                        }
-                      </Table.Td>
-                    );
-                  })}
-                </Table.Tr>
-              );
-            })}
+            {
+              filterDataByFilterValue(renderingData, filterValues)
+                .map((row, index) => {
+                  return (
+                    <Table.Tr
+                      key={row.id || index}
+                      {...getRowProps({
+                        onClick: () => console.log({ row, index }),
+                      })}>
+                      {columns.map((column, index) => {
+                        return (
+                          <Table.Td key={index}>
+                            {row[column.key as keyof User] as ReactNode}
+                          </Table.Td>
+                        );
+                      })}
+                    </Table.Tr>
+                  );
+                })}
           </Table.Body>
         </Table>
         <Pagination>
@@ -93,3 +111,5 @@ export const App = () => {
 }
 
 export default App;
+
+
