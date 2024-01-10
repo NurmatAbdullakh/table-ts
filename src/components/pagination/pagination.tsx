@@ -3,7 +3,8 @@ import { Button } from "./button";
 import { Limit } from "./limit";
 import { Buttongroup } from "./button-group";
 import { Step } from "./step";
-import { Navigator } from "./Navigator";
+import { Navigator } from "./navigator-button";
+
 
 interface PaginationProps {
     children: ReactNode
